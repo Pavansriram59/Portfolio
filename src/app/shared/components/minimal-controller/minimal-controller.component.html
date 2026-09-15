@@ -1,0 +1,747 @@
+<div
+  class="relative w-full max-w-2xl mx-auto flex flex-col items-center select-none"
+  #controllerWrapper
+>
+  <!-- Soft Ambient Backlight Glow Behind Controller -->
+  <div
+    class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-4/5 h-4/5 rounded-full bg-primary/20 blur-3xl pointer-events-none transition-opacity duration-700"
+    [class.opacity-100]="gameState.hoveredButton() !== null"
+    [class.opacity-50]="gameState.hoveredButton() === null"
+  ></div>
+
+  <!-- Main Vector Gamepad (Dark, Sleek Titanium in both Light and Dark Modes) -->
+  <div
+    class="relative w-full aspect-[860/540] max-h-[520px] controller-shadow"
+    #controllerSvgContainer
+  >
+    <svg
+      viewBox="0 0 860 540"
+      class="w-full h-full overflow-visible"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <defs>
+        <!-- Body Gradient (Sleek Obsidian Titanium) -->
+        <linearGradient id="body-surface-grad" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stop-color="#242832" />
+          <stop offset="40%" stop-color="#16181f" />
+          <stop offset="100%" stop-color="#0a0b0e" />
+        </linearGradient>
+
+        <!-- Top Bevel Highlight Rim -->
+        <linearGradient id="bevel-rim-grad" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" stop-color="rgba(255,255,255,0.06)" />
+          <stop offset="50%" stop-color="rgba(255,255,255,0.28)" />
+          <stop offset="100%" stop-color="rgba(255,255,255,0.06)" />
+        </linearGradient>
+
+        <!-- Thumbstick Well Concave Gradient -->
+        <radialGradient id="stick-well-grad" cx="40%" cy="40%" r="60%">
+          <stop offset="0%" stop-color="#121318" />
+          <stop offset="100%" stop-color="#22252f" />
+        </radialGradient>
+
+        <!-- HUD Tooltip Surface Gradient -->
+        <linearGradient id="hud-bg-grad" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stop-color="#1a1c24" stop-opacity="0.96" />
+          <stop offset="100%" stop-color="#0d0e13" stop-opacity="0.98" />
+        </linearGradient>
+
+        <!-- Soft HUD Tooltip Glow Filter -->
+        <filter id="hud-glow" x="-20%" y="-20%" width="140%" height="140%">
+          <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="rgba(0,0,0,0.75)" />
+          <feDropShadow dx="0" dy="0" stdDeviation="3" flood-color="var(--primary)" flood-opacity="0.5" />
+        </filter>
+      </defs>
+
+      <!-- ==========================================
+           CONTROLLER CHASSIS / SILHOUETTE
+           ========================================== -->
+      <!-- Main Chassis Body -->
+      <path
+        d="M 210 110
+           C 320 95, 540 95, 650 110
+           C 740 120, 830 190, 840 330
+           C 850 420, 805 490, 745 505
+           C 685 520, 630 445, 585 375
+           C 540 335, 490 325, 430 325
+           C 370 325, 320 335, 275 375
+           C 230 445, 175 520, 115 505
+           C 55 490, 10 420, 20 330
+           C 30 190, 120 120, 210 110 Z"
+        fill="url(#body-surface-grad)"
+        stroke="#3a3f4e"
+        stroke-width="2.5"
+        class="transition-colors duration-300"
+      />
+
+      <!-- Top Highlight Contour Line -->
+      <path
+        d="M 220 115 C 325 102, 535 102, 640 115"
+        fill="none"
+        stroke="url(#bevel-rim-grad)"
+        stroke-width="2"
+        stroke-linecap="round"
+      />
+
+      <!-- Left & Right Ergonomic Inner Seam Lines -->
+      <path
+        d="M 85 315 C 75 385, 105 450, 145 470 C 170 480, 200 440, 225 385"
+        fill="none"
+        stroke="#2e3340"
+        stroke-width="1.5"
+        opacity="0.6"
+      />
+      <path
+        d="M 775 315 C 785 385, 755 450, 715 470 C 690 480, 660 440, 635 385"
+        fill="none"
+        stroke="#2e3340"
+        stroke-width="1.5"
+        opacity="0.6"
+      />
+
+      <!-- ==========================================
+           CENTER TOUCHPAD & MENU BUTTON
+           ========================================== -->
+      <g transform="translate(355, 115)">
+        <!-- Touchpad Plate -->
+        <rect
+          x="0"
+          y="0"
+          width="150"
+          height="95"
+          rx="8"
+          fill="#181a21"
+          stroke="#2d323f"
+          stroke-width="1.5"
+        />
+        <!-- Center Lightbar Strip -->
+        <rect
+          x="25"
+          y="12"
+          width="100"
+          height="3"
+          rx="1.5"
+          [attr.fill]="gameState.hoveredButton() ? 'var(--primary)' : '#333846'"
+          class="transition-colors duration-300"
+        />
+
+        <!-- Start / Menu Button (Contact) -->
+        <g
+          class="interactive-btn cursor-pointer"
+          (mouseenter)="onButtonHover('START')"
+          (mouseleave)="onButtonHover(null)"
+          (click)="onButtonClick($event, 'contact')"
+          role="button"
+          tabindex="0"
+          aria-label="Menu button: Contact"
+          (keydown.enter)="onButtonClick($event, 'contact')"
+          (keydown.space)="onButtonClick($event, 'contact')"
+        >
+          <rect
+            x="45"
+            y="42"
+            width="60"
+            height="24"
+            rx="6"
+            [attr.fill]="isButtonActive('START') ? 'var(--primary)' : '#22252f'"
+            [attr.stroke]="isButtonActive('START') ? 'var(--primary)' : '#3d4354'"
+            stroke-width="1.5"
+            class="transition-all duration-200"
+          />
+          <text
+            x="75"
+            y="58"
+            font-family="var(--font-sans)"
+            font-size="10"
+            font-weight="600"
+            letter-spacing="0.5"
+            [attr.fill]="isButtonActive('START') ? 'var(--primary-foreground)' : '#9ca3af'"
+            text-anchor="middle"
+          >
+            MENU
+          </text>
+        </g>
+      </g>
+
+      <!-- ==========================================
+           D-PAD (LEFT WING) -> ABOUT
+           ========================================== -->
+      <g
+        class="interactive-btn cursor-pointer"
+        (mouseenter)="onButtonHover('DPAD')"
+        (mouseleave)="onButtonHover(null)"
+        (click)="onButtonClick($event, 'about')"
+        role="button"
+        tabindex="0"
+        aria-label="D-Pad: About section"
+        (keydown.enter)="onButtonClick($event, 'about')"
+        (keydown.space)="onButtonClick($event, 'about')"
+      >
+        <!-- D-Pad Base Circle Plate -->
+        <circle cx="220" cy="240" r="58" fill="#181a21" stroke="#2d323f" stroke-width="1.5" />
+
+        <!-- D-Pad Cross Body -->
+        <path
+          d="M 206 190 C 206 186, 234 186, 234 190 L 234 226 L 270 226 C 274 226, 274 254, 270 254 L 234 254 L 234 290 C 234 294, 206 294, 206 290 L 206 254 L 170 254 C 166 254, 166 226, 170 226 L 206 226 Z"
+          [attr.fill]="isButtonActive('DPAD') ? 'var(--primary)' : '#242833'"
+          [attr.stroke]="isButtonActive('DPAD') ? 'var(--primary)' : '#41485a'"
+          stroke-width="1.5"
+          class="transition-all duration-200"
+        />
+
+        <!-- Directional Arrow Indicators -->
+        <path d="M 220 198 L 225 206 L 215 206 Z" [attr.fill]="isButtonActive('DPAD') ? 'var(--primary-foreground)' : '#9ca3af'" />
+        <path d="M 262 240 L 254 235 L 254 245 Z" [attr.fill]="isButtonActive('DPAD') ? 'var(--primary-foreground)' : '#9ca3af'" />
+        <path d="M 220 282 L 215 274 L 225 274 Z" [attr.fill]="isButtonActive('DPAD') ? 'var(--primary-foreground)' : '#9ca3af'" />
+        <path d="M 178 240 L 186 245 L 186 235 Z" [attr.fill]="isButtonActive('DPAD') ? 'var(--primary-foreground)' : '#9ca3af'" />
+        
+        <!-- Center Pivot Cap -->
+        <circle cx="220" cy="240" r="7" fill="#181a21" />
+      </g>
+
+      <!-- ==========================================
+           ACTION BUTTONS (RIGHT WING)
+           ========================================== -->
+      <g>
+        <!-- Action Base Circle Plate -->
+        <circle cx="640" cy="240" r="58" fill="#181a21" stroke="#2d323f" stroke-width="1.5" />
+
+        <!-- BUTTON Y (TOP) -> PLAYGROUND -->
+        <g
+          class="interactive-btn cursor-pointer"
+          (mouseenter)="onButtonHover('Y')"
+          (mouseleave)="onButtonHover(null)"
+          (click)="onButtonClick($event, 'playground')"
+          role="button"
+          tabindex="0"
+          aria-label="Y button: Playground"
+          (keydown.enter)="onButtonClick($event, 'playground')"
+          (keydown.space)="onButtonClick($event, 'playground')"
+        >
+          <circle
+            cx="640"
+            cy="202"
+            r="17"
+            [attr.fill]="isButtonActive('Y') ? 'var(--primary)' : '#242833'"
+            [attr.stroke]="isButtonActive('Y') ? 'var(--primary)' : '#41485a'"
+            stroke-width="1.5"
+            class="transition-all duration-200"
+          />
+          <text
+            x="640"
+            y="208"
+            font-family="var(--font-sans)"
+            font-size="13"
+            font-weight="700"
+            [attr.fill]="isButtonActive('Y') ? 'var(--primary-foreground)' : '#f3f4f6'"
+            text-anchor="middle"
+          >
+            Y
+          </text>
+        </g>
+
+        <!-- BUTTON B (RIGHT) -> EXPERIENCE -->
+        <g
+          class="interactive-btn cursor-pointer"
+          (mouseenter)="onButtonHover('B')"
+          (mouseleave)="onButtonHover(null)"
+          (click)="onButtonClick($event, 'experience')"
+          role="button"
+          tabindex="0"
+          aria-label="B button: Experience"
+          (keydown.enter)="onButtonClick($event, 'experience')"
+          (keydown.space)="onButtonClick($event, 'experience')"
+        >
+          <circle
+            cx="678"
+            cy="240"
+            r="17"
+            [attr.fill]="isButtonActive('B') ? 'var(--primary)' : '#242833'"
+            [attr.stroke]="isButtonActive('B') ? 'var(--primary)' : '#41485a'"
+            stroke-width="1.5"
+            class="transition-all duration-200"
+          />
+          <text
+            x="678"
+            y="246"
+            font-family="var(--font-sans)"
+            font-size="13"
+            font-weight="700"
+            [attr.fill]="isButtonActive('B') ? 'var(--primary-foreground)' : '#f3f4f6'"
+            text-anchor="middle"
+          >
+            B
+          </text>
+        </g>
+
+        <!-- BUTTON A (BOTTOM) -> PROJECTS -->
+        <g
+          class="interactive-btn cursor-pointer"
+          (mouseenter)="onButtonHover('A')"
+          (mouseleave)="onButtonHover(null)"
+          (click)="onButtonClick($event, 'projects')"
+          role="button"
+          tabindex="0"
+          aria-label="A button: Projects"
+          (keydown.enter)="onButtonClick($event, 'projects')"
+          (keydown.space)="onButtonClick($event, 'projects')"
+        >
+          <circle
+            cx="640"
+            cy="278"
+            r="17"
+            [attr.fill]="isButtonActive('A') ? 'var(--primary)' : '#242833'"
+            [attr.stroke]="isButtonActive('A') ? 'var(--primary)' : '#41485a'"
+            stroke-width="1.5"
+            class="transition-all duration-200"
+          />
+          <text
+            x="640"
+            y="284"
+            font-family="var(--font-sans)"
+            font-size="13"
+            font-weight="700"
+            [attr.fill]="isButtonActive('A') ? 'var(--primary-foreground)' : 'var(--primary)'"
+            text-anchor="middle"
+          >
+            A
+          </text>
+        </g>
+
+        <!-- BUTTON X (LEFT) -> SKILLS -->
+        <g
+          class="interactive-btn cursor-pointer"
+          (mouseenter)="onButtonHover('X')"
+          (mouseleave)="onButtonHover(null)"
+          (click)="onButtonClick($event, 'skills')"
+          role="button"
+          tabindex="0"
+          aria-label="X button: Skills"
+          (keydown.enter)="onButtonClick($event, 'skills')"
+          (keydown.space)="onButtonClick($event, 'skills')"
+        >
+          <circle
+            cx="602"
+            cy="240"
+            r="17"
+            [attr.fill]="isButtonActive('X') ? 'var(--primary)' : '#242833'"
+            [attr.stroke]="isButtonActive('X') ? 'var(--primary)' : '#41485a'"
+            stroke-width="1.5"
+            class="transition-all duration-200"
+          />
+          <text
+            x="602"
+            y="246"
+            font-family="var(--font-sans)"
+            font-size="13"
+            font-weight="700"
+            [attr.fill]="isButtonActive('X') ? 'var(--primary-foreground)' : '#f3f4f6'"
+            text-anchor="middle"
+          >
+            X
+          </text>
+        </g>
+      </g>
+
+      <!-- ==========================================
+           DUAL ANALOG THUMBSTICKS
+           ========================================== -->
+      <!-- Left Thumbstick -->
+      <g>
+        <circle cx="310" cy="340" r="34" fill="#181a21" stroke="#2d323f" stroke-width="1.5" />
+        <circle cx="310" cy="340" r="26" fill="url(#stick-well-grad)" stroke="#2d323f" stroke-width="1" />
+        <circle cx="310" cy="340" r="12" fill="#13141a" stroke="#333846" stroke-width="1" />
+      </g>
+
+      <!-- Right Thumbstick -->
+      <g>
+        <circle cx="550" cy="340" r="34" fill="#181a21" stroke="#2d323f" stroke-width="1.5" />
+        <circle cx="550" cy="340" r="26" fill="url(#stick-well-grad)" stroke="#2d323f" stroke-width="1" />
+        <circle cx="550" cy="340" r="12" fill="#13141a" stroke="#333846" stroke-width="1" />
+      </g>
+
+      <!-- ==========================================
+           VISUALLY APPEALING FLOATING HUD TOOLTIPS
+           ========================================== -->
+
+      <!-- 1. START / MENU BUTTON TOOLTIP (CONTACT) -->
+      <g
+        class="hud-tooltip"
+        [class.active]="isButtonActive('START')"
+        [attr.opacity]="isButtonActive('START') ? '1' : '0'"
+      >
+        <!-- Connector Dotted Hairline -->
+        <path
+          d="M 430 142 L 430 76"
+          fill="none"
+          stroke="var(--primary)"
+          stroke-width="2"
+          stroke-dasharray="4,3"
+          opacity="0.9"
+        />
+        <circle cx="430" cy="142" r="3" fill="var(--primary)" />
+        <circle cx="430" cy="76" r="3" fill="var(--primary)" />
+
+        <!-- Tooltip Badge Pill -->
+        <g transform="translate(315, 30)" filter="url(#hud-glow)">
+          <rect
+            x="0"
+            y="0"
+            width="230"
+            height="46"
+            rx="12"
+            fill="url(#hud-bg-grad)"
+            stroke="var(--primary)"
+            stroke-width="1.75"
+          />
+          <text
+            x="16"
+            y="29"
+            font-family="var(--font-mono)"
+            font-size="13"
+            font-weight="800"
+            fill="var(--primary)"
+          >
+            [MENU]
+          </text>
+          <text
+            x="76"
+            y="29"
+            font-family="var(--font-sans)"
+            font-size="15"
+            font-weight="800"
+            fill="#ffffff"
+          >
+            CONTACT
+          </text>
+          <text
+            x="158"
+            y="28"
+            font-family="var(--font-sans)"
+            font-size="12"
+            font-weight="500"
+            fill="#9ca3af"
+          >
+            &bull; In touch
+          </text>
+        </g>
+      </g>
+
+      <!-- 2. D-PAD TOOLTIP (ABOUT) -->
+      <g
+        class="hud-tooltip"
+        [class.active]="isButtonActive('DPAD')"
+        [attr.opacity]="isButtonActive('DPAD') ? '1' : '0'"
+      >
+        <!-- Connector Dotted Hairline -->
+        <path
+          d="M 175 210 L 125 166"
+          fill="none"
+          stroke="var(--primary)"
+          stroke-width="2"
+          stroke-dasharray="4,3"
+          opacity="0.9"
+        />
+        <circle cx="175" cy="210" r="3" fill="var(--primary)" />
+        <circle cx="125" cy="166" r="3" fill="var(--primary)" />
+
+        <!-- Tooltip Badge Pill -->
+        <g transform="translate(8, 120)" filter="url(#hud-glow)">
+          <rect
+            x="0"
+            y="0"
+            width="215"
+            height="46"
+            rx="12"
+            fill="url(#hud-bg-grad)"
+            stroke="var(--primary)"
+            stroke-width="1.75"
+          />
+          <text
+            x="14"
+            y="29"
+            font-family="var(--font-mono)"
+            font-size="13"
+            font-weight="800"
+            fill="var(--primary)"
+          >
+            [D-PAD]
+          </text>
+          <text
+            x="70"
+            y="29"
+            font-family="var(--font-sans)"
+            font-size="15"
+            font-weight="800"
+            fill="#ffffff"
+          >
+            ABOUT
+          </text>
+          <text
+            x="132"
+            y="28"
+            font-family="var(--font-sans)"
+            font-size="12"
+            font-weight="500"
+            fill="#9ca3af"
+          >
+            &bull; Bio
+          </text>
+        </g>
+      </g>
+
+      <!-- 3. Y BUTTON TOOLTIP (PLAYGROUND) -->
+      <g
+        class="hud-tooltip"
+        [class.active]="isButtonActive('Y')"
+        [attr.opacity]="isButtonActive('Y') ? '1' : '0'"
+      >
+        <!-- Connector Dotted Hairline -->
+        <path
+          d="M 645 185 L 700 121"
+          fill="none"
+          stroke="var(--primary)"
+          stroke-width="2"
+          stroke-dasharray="4,3"
+          opacity="0.9"
+        />
+        <circle cx="645" cy="185" r="3" fill="var(--primary)" />
+        <circle cx="700" cy="121" r="3" fill="var(--primary)" />
+
+        <!-- Tooltip Badge Pill -->
+        <g transform="translate(635, 75)" filter="url(#hud-glow)">
+          <rect
+            x="0"
+            y="0"
+            width="235"
+            height="46"
+            rx="12"
+            fill="url(#hud-bg-grad)"
+            stroke="var(--primary)"
+            stroke-width="1.75"
+          />
+          <text
+            x="14"
+            y="29"
+            font-family="var(--font-mono)"
+            font-size="13"
+            font-weight="800"
+            fill="var(--primary)"
+          >
+            [Y]
+          </text>
+          <text
+            x="44"
+            y="29"
+            font-family="var(--font-sans)"
+            font-size="15"
+            font-weight="800"
+            fill="#ffffff"
+          >
+            PLAYGROUND
+          </text>
+          <text
+            x="165"
+            y="28"
+            font-family="var(--font-sans)"
+            font-size="12"
+            font-weight="500"
+            fill="#9ca3af"
+          >
+            &bull; Waves
+          </text>
+        </g>
+      </g>
+
+      <!-- 4. B BUTTON TOOLTIP (EXPERIENCE) -->
+      <g
+        class="hud-tooltip"
+        [class.active]="isButtonActive('B')"
+        [attr.opacity]="isButtonActive('B') ? '1' : '0'"
+      >
+        <!-- Connector Dotted Hairline directly from Button B to Tooltip box to the right -->
+        <path
+          d="M 695 240 L 735 240"
+          fill="none"
+          stroke="var(--primary)"
+          stroke-width="2"
+          stroke-dasharray="4,3"
+          opacity="0.9"
+        />
+        <circle cx="695" cy="240" r="3" fill="var(--primary)" />
+        <circle cx="735" cy="240" r="3" fill="var(--primary)" />
+
+        <!-- Tooltip Badge Pill placed safely to the right of Button B -->
+        <g transform="translate(735, 217)" filter="url(#hud-glow)">
+          <rect
+            x="0"
+            y="0"
+            width="230"
+            height="46"
+            rx="12"
+            fill="url(#hud-bg-grad)"
+            stroke="var(--primary)"
+            stroke-width="1.75"
+          />
+          <text
+            x="14"
+            y="29"
+            font-family="var(--font-mono)"
+            font-size="13"
+            font-weight="800"
+            fill="var(--primary)"
+          >
+            [B]
+          </text>
+          <text
+            x="44"
+            y="29"
+            font-family="var(--font-sans)"
+            font-size="15"
+            font-weight="800"
+            fill="#ffffff"
+          >
+            EXPERIENCE
+          </text>
+          <text
+            x="155"
+            y="28"
+            font-family="var(--font-sans)"
+            font-size="12"
+            font-weight="500"
+            fill="#9ca3af"
+          >
+            &bull; Roles
+          </text>
+        </g>
+      </g>
+
+      <!-- 5. A BUTTON TOOLTIP (PROJECTS) -->
+      <g
+        class="hud-tooltip"
+        [class.active]="isButtonActive('A')"
+        [attr.opacity]="isButtonActive('A') ? '1' : '0'"
+      >
+        <!-- Connector Dotted Hairline -->
+        <path
+          d="M 645 295 L 700 360"
+          fill="none"
+          stroke="var(--primary)"
+          stroke-width="2"
+          stroke-dasharray="4,3"
+          opacity="0.9"
+        />
+        <circle cx="645" cy="295" r="3" fill="var(--primary)" />
+        <circle cx="700" cy="360" r="3" fill="var(--primary)" />
+
+        <!-- Tooltip Badge Pill -->
+        <g transform="translate(635, 360)" filter="url(#hud-glow)">
+          <rect
+            x="0"
+            y="0"
+            width="235"
+            height="46"
+            rx="12"
+            fill="url(#hud-bg-grad)"
+            stroke="var(--primary)"
+            stroke-width="1.75"
+          />
+          <text
+            x="14"
+            y="29"
+            font-family="var(--font-mono)"
+            font-size="13"
+            font-weight="800"
+            fill="var(--primary)"
+          >
+            [A]
+          </text>
+          <text
+            x="44"
+            y="29"
+            font-family="var(--font-sans)"
+            font-size="15"
+            font-weight="800"
+            fill="#ffffff"
+          >
+            PROJECTS
+          </text>
+          <text
+            x="142"
+            y="28"
+            font-family="var(--font-sans)"
+            font-size="12"
+            font-weight="500"
+            fill="#9ca3af"
+          >
+            &bull; Soon
+          </text>
+        </g>
+      </g>
+
+      <!-- 6. X BUTTON TOOLTIP (SKILLS) -->
+      <g
+        class="hud-tooltip"
+        [class.active]="isButtonActive('X')"
+        [attr.opacity]="isButtonActive('X') ? '1' : '0'"
+      >
+        <!-- Connector Dotted Hairline -->
+        <path
+          d="M 585 240 L 545 220"
+          fill="none"
+          stroke="var(--primary)"
+          stroke-width="2"
+          stroke-dasharray="4,3"
+          opacity="0.9"
+        />
+        <circle cx="585" cy="240" r="3" fill="var(--primary)" />
+        <circle cx="545" cy="220" r="3" fill="var(--primary)" />
+
+        <!-- Tooltip Badge Pill -->
+        <g transform="translate(335, 195)" filter="url(#hud-glow)">
+          <rect
+            x="0"
+            y="0"
+            width="210"
+            height="46"
+            rx="12"
+            fill="url(#hud-bg-grad)"
+            stroke="var(--primary)"
+            stroke-width="1.75"
+          />
+          <text
+            x="14"
+            y="29"
+            font-family="var(--font-mono)"
+            font-size="13"
+            font-weight="800"
+            fill="var(--primary)"
+          >
+            [X]
+          </text>
+          <text
+            x="44"
+            y="29"
+            font-family="var(--font-sans)"
+            font-size="15"
+            font-weight="800"
+            fill="#ffffff"
+          >
+            SKILLS
+          </text>
+          <text
+            x="110"
+            y="28"
+            font-family="var(--font-sans)"
+            font-size="12"
+            font-weight="500"
+            fill="#9ca3af"
+          >
+            &bull; Stack
+          </text>
+        </g>
+      </g>
+
+    </svg>
+  </div>
+</div>

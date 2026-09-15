@@ -1,0 +1,51 @@
+<!-- Backdrop Blur Overlay -->
+<div
+  #backdrop
+  class="fixed inset-0 z-40 bg-black/75 backdrop-blur-md opacity-0 transition-opacity"
+  (click)="close.emit()"
+  aria-hidden="true"
+></div>
+
+<!-- Modal Content Window -->
+<div
+  class="fixed inset-0 z-50 pointer-events-none flex items-center justify-center p-3 sm:p-6 lg:p-8"
+>
+  <div
+    #modalContainer
+    class="pointer-events-auto flex flex-col w-full max-w-3xl max-h-[90vh] sm:max-h-[85vh] rounded-2xl border border-border/80 bg-card/98 backdrop-blur-2xl shadow-[0_25px_60px_-15px_rgba(0,0,0,0.8)] opacity-0 overflow-hidden"
+    role="dialog"
+    aria-modal="true"
+    [attr.aria-label]="title()"
+    tabindex="-1"
+  >
+    <!-- Modal Top Header -->
+    <div
+      class="flex items-center justify-between px-6 py-4 border-b border-border/60 bg-background/50"
+    >
+      <div class="flex items-center gap-3">
+        <span class="text-xs font-bold font-sans uppercase tracking-wider text-primary px-2.5 py-0.5 rounded-full border border-primary/30 bg-primary/10">
+          {{ tag() }}
+        </span>
+        <h2 class="text-lg sm:text-xl font-bold font-sans tracking-tight text-foreground">
+          {{ title() }}
+        </h2>
+      </div>
+
+      <!-- Close Button with Tooltip -->
+      <button
+        type="button"
+        class="h-8 w-8 rounded-full border border-border/80 bg-background/80 hover:bg-card hover:border-primary/50 text-muted-foreground hover:text-foreground transition-all flex items-center justify-center text-sm font-semibold focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary cursor-pointer"
+        (click)="close.emit()"
+        title="Close dialog [Press Escape]"
+        aria-label="Close dialog (Escape)"
+      >
+        ✕
+      </button>
+    </div>
+
+    <!-- Modal Body Content -->
+    <div class="flex-1 overflow-y-auto p-6 sm:p-8 overscroll-contain">
+      <ng-content />
+    </div>
+  </div>
+</div>

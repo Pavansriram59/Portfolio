@@ -1,0 +1,21 @@
+.interactive-btn {
+  transform-box: fill-box;
+  transform-origin: center center;
+  transition: opacity 0.15s ease;
+}
+
+.interactive-btn:hover {
+  opacity: 0.92;
+}
+
+.hud-tooltip {
+  pointer-events: none;
+  transition: opacity 0.25s cubic-bezier(0.16, 1, 0.3, 1), transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  transform-box: fill-box;
+  transform-origin: center center;
+  transform: translateY(4px) scale(0.96);
+}
+
+.hud-tooltip.active {
+  transform: translateY(0px) scale(1);
+}

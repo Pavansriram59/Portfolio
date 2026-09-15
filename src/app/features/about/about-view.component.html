@@ -1,0 +1,50 @@
+<div class="space-y-8 font-sans">
+  
+  <!-- Bio Summary -->
+  <div>
+    <h3 class="text-2xl font-bold text-foreground tracking-tight">
+      {{ data.name }}
+    </h3>
+    <p class="text-sm text-primary font-medium mt-0.5">
+      {{ data.role }}
+    </p>
+    <p class="mt-4 text-base text-muted-foreground leading-relaxed">
+      {{ data.summary }}
+    </p>
+  </div>
+
+  <!-- Education Card -->
+  <div class="p-5 rounded-xl border border-border/80 bg-background/50 space-y-1.5">
+    <div class="text-xs font-bold uppercase tracking-wider text-primary">
+      Education
+    </div>
+    <div class="text-base font-semibold text-foreground">
+      {{ data.education.degree }}
+    </div>
+    <div class="text-sm text-muted-foreground flex flex-wrap items-center justify-between gap-2">
+      <span>{{ data.education.institution }}</span>
+      <span class="font-medium text-foreground/90">{{ data.education.period }} &bull; CGPA: {{ data.education.cgpa }}</span>
+    </div>
+  </div>
+
+  <!-- Core Highlights -->
+  <div>
+    <h4 class="text-sm font-bold uppercase tracking-wider text-foreground/80 mb-4">
+      Core Engineering Focus
+    </h4>
+
+    <div class="grid grid-cols-1 gap-4">
+      @for (item of data.highlights; track item.title) {
+        <div class="p-4 rounded-xl border border-border/60 bg-background/30 hover:border-primary/50 transition-colors">
+          <h5 class="text-sm font-bold text-foreground mb-1">
+            {{ item.title }}
+          </h5>
+          <p class="text-xs text-muted-foreground leading-relaxed">
+            {{ item.description }}
+          </p>
+        </div>
+      }
+    </div>
+  </div>
+
+</div>

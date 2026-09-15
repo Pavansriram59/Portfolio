@@ -1,0 +1,46 @@
+<div class="w-full flex flex-col items-center space-y-4 sm:space-y-5">
+  <!-- Dynamic Destination Callout Strip -->
+  <div class="h-14 flex items-center justify-center">
+    @if (gameState.activeDestination(); as dest) {
+      <div
+        class="inline-flex items-center gap-2.5 px-4 sm:px-5 py-2 rounded-full border border-primary/40 bg-card/90 backdrop-blur-md text-xs sm:text-sm text-foreground shadow-md transition-all duration-200 animate-fadeIn"
+      >
+        <span class="font-bold text-primary">[{{ dest.buttonName }}]</span>
+        <span class="font-semibold text-foreground">{{ dest.label }}</span>
+        <span class="text-muted-foreground hidden sm:inline">&mdash; {{ dest.tagline }}</span>
+      </div>
+    } @else {
+      <div class="text-xs sm:text-sm text-muted-foreground/80 font-medium tracking-wide">
+        Press or click any controller button to explore
+      </div>
+    }
+  </div>
+
+  <!-- Explore Indicator -->
+  <div class="flex items-center gap-2 text-xs sm:text-sm text-muted-foreground font-semibold">
+    <span>Explore my work</span>
+    <span class="text-primary font-bold animate-bounce">&darr;</span>
+  </div>
+
+  <!-- Discreet Quick Buttons with Larger Font Size and Rich Tooltips -->
+  <nav class="flex flex-wrap items-center justify-center gap-2.5 sm:gap-3.5 text-xs sm:text-sm" aria-label="Direct navigation">
+    @for (point of gameState.navPoints; track point.id) {
+      <button
+        type="button"
+        class="px-4 py-2 sm:px-4.5 sm:py-2.5 rounded-lg border border-border/70 bg-card/60 text-muted-foreground hover:border-primary/70 hover:text-foreground transition-all duration-150 text-xs sm:text-sm font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary cursor-pointer"
+        [class.border-primary]="isHovered(point.buttonKey)"
+        [class.text-foreground]="isHovered(point.buttonKey)"
+        [class.bg-card]="isHovered(point.buttonKey)"
+        [class.shadow-sm]="isHovered(point.buttonKey)"
+        [title]="getButtonTooltip(point)"
+        [attr.aria-label]="getButtonTooltip(point)"
+        (mouseenter)="onHover(point.buttonKey)"
+        (mouseleave)="onHover(null)"
+        (click)="onSelect(point.id)"
+      >
+        <span class="text-primary font-bold mr-1.5 font-mono">[{{ point.buttonKey }}]</span>
+        <span class="font-medium">{{ point.label }}</span>
+      </button>
+    }
+  </nav>
+</div>

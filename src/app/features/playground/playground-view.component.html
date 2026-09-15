@@ -1,0 +1,108 @@
+<div class="space-y-6 font-sans">
+  
+  <div>
+    <h3 class="text-xl font-bold text-foreground">
+      Kinetic Wave Synthesizer
+    </h3>
+    <p class="text-sm text-muted-foreground mt-1">
+      Interactive physics and motion experiment built with Anime.js. Adjust modulation frequency and amplitude in real time.
+    </p>
+  </div>
+
+  <!-- Kinetic Visualizer Box -->
+  <div
+    class="relative h-60 rounded-2xl border border-border/80 bg-background/80 flex items-center justify-center p-6 overflow-hidden select-none"
+  >
+    <div #barsContainer class="flex items-center justify-center gap-2 h-40 w-full max-w-md px-4 z-10">
+      @for (bar of bars; track bar) {
+        <div
+          class="kinetic-bar flex-1 rounded-full bg-primary transition-colors duration-200"
+          style="height: 14px; min-width: 4px;"
+        ></div>
+      }
+    </div>
+  </div>
+
+  <!-- Controls -->
+  <div class="p-5 rounded-2xl border border-border/80 bg-background/50 space-y-4">
+    
+    <!-- Mode Tabs with Tooltips -->
+    <div>
+      <label class="block text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">
+        Waveform Pattern
+      </label>
+      <div class="flex flex-wrap gap-2">
+        @for (mode of modes; track mode) {
+          <button
+            type="button"
+            class="px-3.5 py-1.5 rounded-lg border text-xs font-medium transition-all focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary cursor-pointer"
+            [class.border-primary]="currentMode() === mode"
+            [class.bg-primary]="currentMode() === mode"
+            [class.text-primary-foreground]="currentMode() === mode"
+            [class.border-border]="currentMode() !== mode"
+            [class.bg-card]="currentMode() !== mode"
+            [class.text-muted-foreground]="currentMode() !== mode"
+            [title]="'Switch waveform pattern to ' + mode"
+            (click)="setMode(mode)"
+          >
+            {{ mode }}
+          </button>
+        }
+      </div>
+    </div>
+
+    <!-- Sliders with Tooltips -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
+      <div>
+        <div class="flex justify-between text-xs text-muted-foreground font-medium mb-1">
+          <span>Amplitude</span>
+          <span class="text-foreground font-bold">{{ amplitude() }}px</span>
+        </div>
+        <input
+          type="range"
+          min="30"
+          max="140"
+          step="10"
+          [value]="amplitude()"
+          (input)="onAmplitudeChange($event)"
+          class="w-full accent-primary cursor-pointer bg-border rounded-lg"
+          aria-label="Adjust amplitude"
+          [title]="'Current wave amplitude: ' + amplitude() + 'px'"
+        />
+      </div>
+
+      <div>
+        <div class="flex justify-between text-xs text-muted-foreground font-medium mb-1">
+          <span>Frequency / Speed</span>
+          <span class="text-foreground font-bold">{{ duration() }}ms</span>
+        </div>
+        <input
+          type="range"
+          min="400"
+          max="1600"
+          step="100"
+          [value]="duration()"
+          (input)="onDurationChange($event)"
+          class="w-full accent-primary cursor-pointer bg-border rounded-lg"
+          aria-label="Adjust frequency and speed"
+          [title]="'Current oscillation duration: ' + duration() + 'ms'"
+        />
+      </div>
+    </div>
+
+    <!-- Shockwave Pulse with Tooltip -->
+    <div class="pt-2 flex items-center justify-between">
+      <span class="text-xs text-muted-foreground">Trigger kinetic shockwave:</span>
+      <button
+        type="button"
+        class="px-4 py-2 rounded-lg border border-primary bg-primary text-primary-foreground font-bold text-xs hover:bg-primary/90 transition-all focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary cursor-pointer"
+        (click)="triggerPulse()"
+        title="Fire a physical ripple shockwave across the bars"
+      >
+        Pulse Wave
+      </button>
+    </div>
+
+  </div>
+
+</div>

@@ -1,0 +1,34 @@
+<div class="space-y-8 font-sans">
+  
+  <div>
+    <p class="text-sm text-muted-foreground leading-relaxed">
+      Comprehensive overview of programming languages, frontend frameworks, enterprise architecture tools, and developer productivity toolchains.
+    </p>
+  </div>
+
+  <!-- Skills Grid -->
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+    @for (cat of categories; track cat.title) {
+      <div class="p-5 rounded-xl border border-border/80 bg-background/50 flex flex-col justify-between space-y-4 hover:border-primary/50 transition-colors">
+        <div>
+          <h3 class="text-base font-bold text-foreground">
+            {{ cat.title }}
+          </h3>
+          <p class="text-xs text-muted-foreground mt-1 leading-relaxed">
+            {{ cat.description }}
+          </p>
+        </div>
+
+        <!-- Chips -->
+        <div class="flex flex-wrap gap-1.5 pt-2 border-t border-border/40">
+          @for (skill of cat.skills; track skill) {
+            <span class="px-3 py-1 rounded-lg border border-border/80 bg-card/60 text-xs font-medium text-foreground hover:border-primary/60 hover:text-primary transition-colors">
+              {{ skill }}
+            </span>
+          }
+        </div>
+      </div>
+    }
+  </div>
+
+</div>
