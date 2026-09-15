@@ -5,8 +5,8 @@
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
-    "build:gh-pages": "ng build --base-href /portfolio/",
-    "deploy:gh": "ng deploy --base-href=/portfolio/",
+    "build:gh-pages": "ng build --base-href /Portfolio/",
+    "deploy:gh": "ng deploy --base-href=/Portfolio/",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "lint": "ng lint"
